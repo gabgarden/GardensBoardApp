@@ -1,0 +1,20 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{baseTemplate::imports-css(title='Welcome')}">
+</head>
+<body>
+
+<div th:replace="~{baseTemplate::navbar}"></div>
+
+<div class="container text-center" style="margin-top: 120px;">
+  <h1>Welcome to Garden's Board</h1>
+  <p class="lead">Organize your band's shows, rehearsals, and demos easily.</p>
+  <a href="/login" class="btn btn-primary btn-lg mt-4">Login</a>
+</div>
+
+<div th:replace="~{baseTemplate::footer}"></div>
+
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>
