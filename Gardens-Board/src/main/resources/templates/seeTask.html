@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+    <title>Detalhes da Tarefa</title>
+    <style>
+        .calendar-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .calendar {
+            max-width: 300px;
+            margin: 0 auto;
+            background-color: #303030;
+            border-radius: 8px;
+            padding: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .calendar .month {
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 1rem;
+            color: #e0e0e0;
+        }
+        .calendar .weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            text-align: center;
+            font-weight: bold;
+            font-size: 0.8rem;
+            color: #a0a0a0;
+            margin-bottom: 5px;
+        }
+        .calendar .days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            grid-gap: 3px;
+        }
+        .calendar .day {
+            height: 30px;
+            width: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            cursor: default;
+            font-size: 0.8rem;
+            color: #e0e0e0;
+        }
+        .calendar .day.today {
+            background-color: #404040;
+        }
+        .calendar .day.start-date {
+            background-color: #0d6efd;
+            color: white;
+        }
+        .calendar .day.end-date {
+            background-color: #dc3545;
+            color: white;
+        }
+        .calendar .day.in-range {
+            background-color: #404850;
+        }
+        .calendar .day.disabled {
+            opacity: 0.3;
+        }
+        .date-info {
+            padding: 15px;
+            background-color: #303030;
+            border-radius: 5px;
+            margin-top: 15px;
+            width: 100%;
+            max-width: 500px;
+        }
+        .date-info .date-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .date-info .date-item i {
+            margin-right: 10px;
+            font-size: 1.1rem;
+        }
+        .date-info .start-date-icon {
+            color: #0d6efd;
+        }
+        .date-info .end-date-icon {
+            color: #dc3545;
+        }
+        .calendar-legend {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+            font-size: 0.8rem;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body class="bg-body-tertiary">
+    <div class="container mt-5">
+        <div class="card shadow mb-4">
+            <div class="card-body text-center p-4">
+                <img src="/images/logo.png" height="77" width="92" class="mb-3" alt="Logo"/>
+                <h1 class="mb-3">Detalhes da Tarefa</h1>
+                
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <a th:href="@{/tasks(userId=${userId})}" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left"></i> Voltar para Tarefas
+                    </a>
+                </div>
+                
+                <!-- Detalhes da Tarefa -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h3 class="card-title mb-0" th:text="${task.title}">Título da Tarefa</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-4">
+                            <div class="col-md-12">
+                                <h5 class="text-muted mb-2">Descrição:</h5>
+                                <p class="lead" th:text="${task.description}">Descrição detalhada da tarefa aqui...</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Calendário com datas de início e fim -->
+                        <div class="row mb-4">
+                            <div class="col-md-12">
+                                <div class="card bg-dark text-light">
+                                    <div class="card-header">
+                                        <h5 class="mb-0">Período da Tarefa</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <!-- Calendário Simplificado -->
+                                        <div class="calendar-container">
+                                            <div class="calendar" th:with="startMonth=${#temporals.month(task.startAt)},
+                                                                        endMonth=${#temporals.month(task.endAt)},
+                                                                        startYear=${#temporals.year(task.startAt)},
+                                                                        endYear=${#temporals.year(task.endAt)},
+                                                                        startDay=${#temporals.day(task.startAt)},
+                                                                        endDay=${#temporals.day(task.endAt)},
+                                                                        sameMonth=${startMonth == endMonth && startYear == endYear}">
+                                                
+                                                <div class="month" th:text="${#temporals.format(task.startAt, 'MMMM yyyy')}">Maio 2025</div>
+                                                
+                                                <div class="weekdays">
+                                                    <div>D</div>
+                                                    <div>S</div>
+                                                    <div>T</div>
+                                                    <div>Q</div>
+                                                    <div>Q</div>
+                                                    <div>S</div>
+                                                    <div>S</div>
+                                                </div>
+                                                
+                                                <div class="days" id="calendarDays">
+                                                    <!-- Dias do calendário serão preenchidos via JavaScript -->
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="calendar-legend">
+                                                <div class="legend-item">
+                                                    <div class="legend-dot" style="background-color: #0d6efd;"></div>
+                                                    <span>Início</span>
+                                                </div>
+                                                <div class="legend-item">
+                                                    <div class="legend-dot" style="background-color: #dc3545;"></div>
+                                                    <span>Término</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Informações de Data e Hora -->
+                                        <div class="date-info mt-3 mx-auto">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="date-item">
+                                                        <i class="bi bi-calendar-check start-date-icon"></i>
+                                                        <div>
+                                                            <strong>Início:</strong>
+                                                            <span th:text="${#temporals.format(task.startAt, 'dd/MM/yyyy')}">01/01/2025</span>
+                                                            <span th:if="${#temporals.hour(task.startAt) != 0}" 
+                                                                  th:text="${' às ' + #temporals.format(task.startAt, 'HH:mm')}">
+                                                                às 09:00
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="date-item">
+                                                        <i class="bi bi-calendar-x end-date-icon"></i>
+                                                        <div>
+                                                            <strong>Término:</strong>
+                                                            <span th:text="${#temporals.format(task.endAt, 'dd/MM/yyyy')}">15/01/2025</span>
+                                                            <span th:if="${#temporals.hour(task.endAt) != 0}" 
+                                                                  th:text="${' às ' + #temporals.format(task.endAt, 'HH:mm')}">
+                                                                às 18:00
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Seção de Colaboradores (se aplicável) -->
+                        <div class="row mb-4" th:if="${task.collaborators != null && !task.collaborators.isEmpty()}">
+                            <div class="col-md-12">
+                                <div class="card bg-dark text-light">
+                                    <div class="card-header">
+                                        <h5 class="mb-0">Colaboradores</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <ul class="list-group">
+                                            <li th:each="collaborator : ${task.collaborators}" class="list-group-item bg-dark text-light border-secondary">
+                                                <span th:text="${collaborator.name}">Nome do Colaborador</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Botões de Ação -->
+                        <div class="d-flex justify-content-center gap-3 mt-4">
+                            <a th:href="@{/tasks/{id}/edit(id=${task.id}, userId=${userId})}" class="btn btn-primary">
+                                <i class="bi bi-pencil"></i> Editar Tarefa
+                            </a>
+                            <a th:href="@{/tasks/{id}/delete(id=${task.id}, userId=${userId})}" class="btn btn-danger" 
+                               onclick="return confirm('Tem certeza que deseja excluir esta tarefa?')">
+                                <i class="bi bi-trash"></i> Excluir Tarefa
+                            </a>
+                            <a th:href="@{/tasks/{id}/add-collaborator(id=${task.id}, userId=${userId})}" class="btn btn-success">
+                                <i class="bi bi-person-plus"></i> Adicionar Colaborador
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bootstrap JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Script para gerar o calendário -->
+    <script th:inline="javascript">
+        document.addEventListener('DOMContentLoaded', function() {
+            // Obter datas da tarefa do Thymeleaf
+            const startDateStr = /*[[${#temporals.format(task.startAt, 'yyyy-MM-dd')}]]*/ '2025-05-01';
+            const endDateStr = /*[[${#temporals.format(task.endAt, 'yyyy-MM-dd')}]]*/ '2025-05-15';
+            
+            const startDate = new Date(startDateStr);
+            const endDate = new Date(endDateStr);
+            
+            // Configurar o calendário para o mês da data de início
+            const currentMonth = startDate.getMonth();
+            const currentYear = startDate.getFullYear();
+            
+            // Gerar o calendário
+            generateCalendar(currentMonth, currentYear, startDate, endDate);
+        });
+        
+        function generateCalendar(month, year, startDate, endDate) {
+            const daysContainer = document.getElementById('calendarDays');
+            daysContainer.innerHTML = '';
+            
+            // Obter o primeiro dia do mês
+            const firstDay = new Date(year, month, 1);
+            // Obter o último dia do mês
+            const lastDay = new Date(year, month + 1, 0);
+            
+            // Adicionar dias vazios antes do primeiro dia do mês
+            for (let i = 0; i < firstDay.getDay(); i++) {
+                const emptyDay = document.createElement('div');
+                emptyDay.className = 'day disabled';
+                daysContainer.appendChild(emptyDay);
+            }
+            
+            // Adicionar todos os dias do mês
+            for (let i = 1; i <= lastDay.getDate(); i++) {
+                const currentDate = new Date(year, month, i);
+                const dayEl = document.createElement('div');
+                dayEl.className = 'day';
+                dayEl.textContent = i;
+                
+                // Verificar se é a data de início
+                if (currentDate.toDateString() === startDate.toDateString()) {
+                    dayEl.classList.add('start-date');
+                }
+                
+                // Verificar se é a data de término
+                if (currentDate.toDateString() === endDate.toDateString()) {
+                    dayEl.classList.add('end-date');
+                }
+                
+                // Verificar se está dentro do intervalo
+                if (currentDate > startDate && currentDate < endDate) {
+                    dayEl.classList.add('in-range');
+                }
+                
+                // Verificar se é hoje
+                const today = new Date();
+                if (currentDate.toDateString() === today.toDateString()) {
+                    dayEl.classList.add('today');
+                }
+                
+                daysContainer.appendChild(dayEl);
+            }
+        }
+    </script>
+</body>
+</html>

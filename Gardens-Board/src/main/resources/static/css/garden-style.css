@@ -1,0 +1,239 @@
+/* Garden's Board - Main Stylesheet */
+
+:root {
+    --dark-purple: #2e1a2b;
+    --light-green: #8fe66d;
+   
+}
+
+/* Base Styles */
+body {
+    background-color: var(--dark-purple);
+    color: white;
+    font-family: 'Arial', sans-serif;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+}
+
+/* Layout Containers */
+.gardens-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.top-nav {
+    padding: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.main-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+}
+
+/* Navigation Elements */
+.logo-small {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 20px;
+}
+
+.nav-icons {
+    display: flex;
+    gap: 20px;
+}
+
+.nav-icon {
+    color: white;
+    font-size: 20px;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.nav-icon:hover {
+    color: var(--light-green);
+}
+
+/* Logo & Header Elements */
+.logo-container {
+    text-align: center;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.main-logo {
+    max-width: 210px;
+    height: auto;
+}
+
+
+
+
+/* Divider */
+.divider {
+    width: 200%;
+    height: 1px;
+    background-color: rgba(255, 255, 255, 0.5);
+    margin: 20px 0;
+    position: relative;
+    left: -50%;  /* Desloca metade da largura extra para a esquerda */
+}
+
+/* User Section */
+.user-circle {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--dark-purple);
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+.garden-name {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.description {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 16px;
+    margin-bottom: 30px;
+}
+
+/* Menu Buttons */
+.menu-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    max-width: 300px;
+}
+
+.menu-button {
+    background-color: white;
+    color: var(--dark-purple);
+    border: none;
+    border-radius: 5px;
+    padding: 12px 20px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.menu-button:hover {
+    background-color: rgba(255, 255, 255, 0.9);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.menu-button.logout-button {
+    background-color: #ff4c4c;
+    color: white;
+}
+
+.menu-button.logout-button:hover {
+    background-color: #ff3333;
+}
+
+.menu-button i {
+    margin-right: 15px;
+    font-size: 18px;
+}
+
+/* Decorative Elements */
+.logo-decoration {
+    position: relative;
+}
+
+
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .nav-icons {
+        gap: 15px;
+    }
+    
+    .garden-title {
+        font-size: 40px;
+    }
+    
+    .garden-subtitle {
+        font-size: 50px;
+    }
+    
+    .menu-buttons {
+        max-width: 260px;
+    }
+}
+
+/* Content Cards */
+.gardens-card {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.gardens-card-title {
+    color: var(white);
+    font-size: 20px;
+    margin-bottom: 15px;
+}
+
+/* Form Elements */
+.gardens-input {
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.gardens-input:focus {
+    outline: none;
+    border-color: var(--light-green);
+}
+
+.gardens-btn {
+    background-color: var(--light-green);
+    color: var(--dark-purple);
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.gardens-btn:hover {
+     background-color: #a0ff7e;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.gardens-btn-danger {
+    background-color: var(--pink);
+}
+
+.form-label {
+    color: white; 
+    font-weight: 500; 
+}
+

@@ -134,6 +134,23 @@ public class TaskService {
         return taskRepository.save(task);
     }
 
+
+
+
+
+
+       /**
+     * Finds a task by its ID
+     * @param idTask the ID of the task to find
+     * @return the task if found
+     * @throws TaskNotFoundException if the task doesn't exist
+     */
+    public TaskModel findById(UUID idTask) {
+        return taskRepository.findById(idTask)
+            .orElseThrow(() -> new TaskNotFoundException("Task with ID " + idTask + " not found"));
+    }
+
+
     /**
      * Finds tasks owned by a specific user
      * @param idUserOwner the ID of the task owner

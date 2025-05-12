@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+
+<head th:replace="~{fragments :: common-head('Garden\'s Board - Tasks')}">
+  
+    <style>
+        .task-card {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .task-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3) !important;
+        }
+        .task-card-content {
+            position: relative;
+            z-index: 1;
+        }
+        .task-card-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="gardens-container">
+       
+        <div th:replace="~{fragments :: top-nav}"></div>
+        
+        <div class="main-content" style="align-items: center; padding-top: 0;">
+            
+            <div th:replace="~{fragments :: main-logo}"></div>
+            
+            <div class="gardens-card" style="width: 100%; max-width: 700px;">
+                <div class="text-center mb-4">
+                    <h2 class="gardens-card-title">Your Tasks</h2>
+                </div>
+                
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <a th:href="@{user/home/{id}(id=${userId})}" class="gardens-btn" style="background-color: rgba(255, 255, 255, 0.2);">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </a>
+                    <a th:href="@{/tasks/new(userId=${userId})}" class="gardens-btn">
+                        <i class="fas fa-plus-circle"></i> New Task
+                    </a>
+                </div>
+                
+              
+                <div th:if="${#lists.isEmpty(tasks)}" style="background-color: rgba(255, 255, 255, 0.1); padding: 15px; border-radius: 8px; text-align: center;">
+                    <i class="fas fa-info-circle"></i> You don't have any tasks yet.
+                </div>
+                
+                <div class="d-flex flex-column" style="gap: 20px;">
+                    <div th:each="task : ${tasks}" class="w-100">
+                        <div class="gardens-card task-card" style="margin-bottom: 0; position: relative;">
+                       
+                            <a th:href="@{/tasks/{id}/seeTask(id=${task.id}, userId=${userId})}" class="task-card-overlay"></a>
+                            
+                            <div style="border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 10px; margin-bottom: 10px;">
+                                <h5 style="color: var(--light-green); font-weight: bold;" th:text="${task.title}">Title of the task</h5>
+                            </div>
+                            
+                            <div class="task-card-content">
+                                <p style="color: rgba(255, 255, 255, 0.8);" th:text="${task.description}">Task description here...</p>
+                                <div class="d-flex justify-content-between" style="font-size: 0.9rem; color: rgba(255, 255, 255, 0.6);">
+                                    <div>
+                                        <span>Begin in: </span>
+                                        <span th:text="${#temporals.format(task.startAt, 'dd/MM/yyyy')}">01/01/2025</span>
+                                    </div>
+                                    <div>
+                                        <span>End at: </span>
+                                        <span th:text="${#temporals.format(task.endAt, 'dd/MM/yyyy')}">01/01/2025</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div style="border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 10px; margin-top: 15px;">
+                                <div class="d-flex justify-content-between">
+                                    <a th:href="@{/tasks/{id}/seeTask(id=${task.id}, userId=${userId})}" class="gardens-btn" style="padding: 5px 15px; font-size: 0.9rem; background-color: rgba(255, 255, 255, 0.2);">
+                                        <i class="fas fa-eye"></i> See
+                                    </a>
+                                    <div>
+                                        <a th:href="@{/tasks/{id}/edit(id=${task.id}, userId=${userId})}" class="gardens-btn" style="padding: 5px 15px; font-size: 0.9rem; background-color: var(--yellow); margin-right: 5px;">
+                                            <i class="fas fa-pencil-alt"></i> Edit
+                                        </a>
+                                        <a th:href="@{/tasks/{id}/delete(id=${task.id}, userId=${userId})}" class="gardens-btn gardens-btn-danger" style="padding: 5px 15px; font-size: 0.9rem;"
+                                           onclick="return confirm('Are u sure?')">
+                                            <i class="fas fa-trash-alt"></i> Remove
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+         
+            <div th:if="${totalPages > 1}" class="mt-4">
+                <div style="display: flex; justify-content: center;">
+                    <div style="display: flex; background-color: rgba(255, 255, 255, 0.1); border-radius: 5px; padding: 5px;">
+                        <a th:class="${currentPage == 0 ? 'disabled' : ''}" style="padding: 5px 10px; color: white; text-decoration: none; opacity: ${currentPage == 0 ? '0.5' : '1'};"
+                           th:href="@{/tasks(page=${currentPage - 1}, userId=${userId})}" aria-label="Anterior">
+                            <i class="fas fa-chevron-left"></i>
+                        </a>
+                        
+                        <div th:each="i : ${#numbers.sequence(0, totalPages - 1)}" style="margin: 0 2px;">
+                            <a th:href="@{/tasks(page=${i}, userId=${userId})}" th:text="${i + 1}"
+                               style="width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 50%; text-decoration: none;"
+                               th:style="${currentPage == i ? 'background-color: var(--light-green); color: var(--dark-purple);' : 'background-color: rgba(255, 255, 255, 0.1); color: white;'}">
+                            </a>
+                        </div>
+                        
+                        <a th:class="${currentPage == totalPages - 1 ? 'disabled' : ''}" style="padding: 5px 10px; color: white; text-decoration: none; opacity: ${currentPage == totalPages - 1 ? '0.5' : '1'};"
+                           th:href="@{/tasks(page=${currentPage + 1}, userId=${userId})}" aria-label="Próximo">
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div th:replace="~{fragments :: common-scripts}"></div>
+    
+ 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const taskCards = document.querySelectorAll('.task-card');
+            taskCards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px)';
+                    this.style.boxShadow = '0 10px 20px rgba(0, 0, 0, 0.3)';
+                });
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                    this.style.boxShadow = 'none';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

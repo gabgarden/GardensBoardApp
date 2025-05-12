@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments :: common-head('New Task')}"></head>
+
+<body>
+    <div class="gardens-container">
+     
+        <div th:replace="~{fragments :: top-nav}"></div>
+        
+        
+        <div class="main-content">
+           
+            <div th:replace="~{fragments :: main-logo}"></div>
+            
+            <h1 class="page-title">New Task</h1>
+            
+            
+            <div class="card shadow mb-4 gardens-card">
+                <div class="card-body p-4">
+                    
+                    <div class="d-flex justify-content-start mb-4">
+                        <a th:href="@{/tasks(userId=${userId})}" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left"></i> Voltar para Lista
+                        </a>
+                    </div>
+                    
+           
+                    <div th:if="${errorMessage}" class="alert alert-danger">
+                        <span th:text="${errorMessage}"></span>
+                    </div>
+                    <div th:if="${successMessage}" class="alert alert-success">
+                        <span th:text="${successMessage}"></span>
+                    </div>
+                    
+                    
+                    <form th:action="@{/tasks/save}" th:object="${task}" method="post" class="text-start">
+                        <input type="hidden" th:field="*{id}" />
+                        <input type="hidden" name="userId" th:value="${userId}" />
+                        <input type="hidden" name="idUserOwner" th:value="${userId}" />
+                        
+                       
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Title <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="title" th:field="*{title}" 
+                                   maxlength="100" required placeholder="Digite o título da tarefa">
+                            <div class="form-text text-danger" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
+                        </div>
+                        
+                        
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description</label>
+                            <textarea class="form-control" id="description" th:field="*{description}" 
+                                      rows="3" maxlength="500" placeholder="Digite uma descrição detalhada da tarefa"></textarea>
+                            <div class="form-text text-danger" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>
+                        </div>
+                        
+                      
+                        <div class="row">
+                          
+                            <div class="col-md-6 mb-3">
+                                <label for="startAt" class="form-label">Start date</label>
+                                <input type="datetime-local" class="form-control" id="startAt" th:field="*{startAt}">
+                            </div>
+                            
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="endAt" class="form-label">End date</label>
+                                <input type="datetime-local" class="form-control" id="endAt" th:field="*{endAt}">
+                            </div>
+                        </div>
+                        
+                       
+                        <div class="mb-3">
+                            <label for="priority" class="form-label">Priority</label>
+                            <select class="form-select" id="priority" th:field="*{priority}">
+                                <option value="">Select Priority</option>
+                                <option value="High">High</option>
+                                <option value="Medium">Medium</option>
+                                <option value="Low">Low</option>
+                            </select>
+                            <div class="form-text text-danger" th:if="${#fields.hasErrors('priority')}" th:errors="*{priority}"></div>
+                        </div>
+                        
+                       
+                        <div class="mb-4">
+                            <label class="form-label">collaborators</label>
+                            <div class="card p-3">
+                                <div class="mb-2" th:if="${#lists.isEmpty(availableUsers)}">
+                                    <span class="text-muted">Not users avaiable.</span>
+                                </div>
+                                <div class="row row-cols-1 row-cols-md-2 g-3" th:if="${!#lists.isEmpty(availableUsers)}">
+                                    <div class="col" th:each="user : ${availableUsers}">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" 
+                                                   th:value="${user.id}" th:id="${'user-' + user.id}" 
+                                                   name="collaborators">
+                                            <label class="form-check-label" th:for="${'user-' + user.id}" 
+                                                   th:text="${user.name}">Username</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <button type="reset" class="btn btn-outline-secondary me-md-2">
+                                <i class="fas fa-sync-alt"></i> Clear
+                            </button>
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-check-circle"></i> Save Task
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div th:replace="~{fragments :: common-scripts}"></div>
+   
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const startAt = document.getElementById('startAt');
+            const endAt = document.getElementById('endAt');
+            
+            endAt.addEventListener('change', function() {
+                if (startAt.value && endAt.value) {
+                    const startDate = new Date(startAt.value);
+                    const endDate = new Date(endAt.value);
+                    
+                    if (endDate < startDate) {
+                        alert('The end date must be after the start date.');
+                        endAt.value = '';
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

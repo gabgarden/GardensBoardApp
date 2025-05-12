@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments :: common-head('My Account')}"></head>
+
+<body>
+    <div class="gardens-container">
+       
+        <div th:replace="~{fragments :: top-nav}"></div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+         
+            <div th:replace="~{fragments :: main-logo}"></div>
+            
+            <h1 class="page-title" style="color: white; margin-bottom: 20px;">My Account</h1>
+            
+            <div class="gardens-card" style="max-width: 500px; width: 100%;">
+                <div class="text-center mb-4">
+                    <div class="user-avatar mb-3" style="width: 80px; height: 80px; border-radius: 50%; background-color: var(--light-green); color: var(--dark-purple); font-size: 36px; line-height: 80px; margin: 0 auto; font-weight: bold;">
+                        <span th:text="${#strings.substring(user.name, 0, 1).toUpperCase()}">U</span>
+                    </div>
+                </div>
+                
+                <!-- User Information -->
+                <div class="user-info">
+                    <div class="info-row d-flex justify-content-between py-2">
+                        <span style="color: #8fe66d;">Name:</span>
+                        <span th:text="${user.name}" style="color: white;">User Name</span>
+                    </div>
+                    
+                    <div class="info-row d-flex justify-content-between py-2">
+                        <span style="color: #8fe66d;">Username:</span>
+                        <span th:text="${user.username}" style="color: white;">username</span>
+                    </div>
+                    
+                   
+                    
+                  
+                </div>
+                
+                <div class="d-flex justify-content-between mt-4">
+                    <a th:href="@{home/{id}(id=${userId})}" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </a>
+                    
+                    <a th:href="@{/user/my-account/edit/{userId}(userId=${user.id})}" class="gardens-btn">
+    <i class="fas fa-user-edit"></i> Edit Profile
+</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div th:replace="~{fragments :: common-scripts}"></div>
+</body>
+</html>

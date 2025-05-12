@@ -60,9 +60,9 @@ public class TaskController {
         taskModel.setIdUserOwner((UUID) idUser);
         
         try {
-            // Chamar o service para criar a tarefa
+            // invoke the service to create the task
             TaskModel createdTask = taskService.create(taskModel, (UUID) idUser);
-            // Usar status 201 (Created) para criação de recursos
+            
             return ResponseEntity.status(HttpStatus.CREATED).body(createdTask);
         } catch (InvalidTaskDateException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
@@ -158,10 +158,9 @@ public class TaskController {
             List<EntityModel<TaskModel>> taskResources = tasks.stream().map(task -> {
                 EntityModel<TaskModel> resource = EntityModel.of(task);
 
-                // Link para o próprio recurso
+               
                 resource.add(linkTo(methodOn(TaskController.class).getTasksByAuthenticatedUser(request)).withSelfRel());
 
-                // Link para a lista de todas as tarefas do usuário
                 resource.add(linkTo(methodOn(TaskController.class).getTasksByAuthenticatedUser(request)).withRel("tasks"));
 
                 return resource;
@@ -169,7 +168,6 @@ public class TaskController {
 
             CollectionModel<EntityModel<TaskModel>> collection = CollectionModel.of(taskResources);
 
-            // Adiciona um link geral para esta coleção
             collection.add(linkTo(methodOn(TaskController.class).getTasksByAuthenticatedUser(request)).withSelfRel());
 
             return ResponseEntity.ok(collection);

@@ -8,6 +8,7 @@ import br.edu.iff.ccc.bsi.gardensBoard.model.UserModel;
 import br.edu.iff.ccc.bsi.gardensBoard.repository.UserRepository;
 import at.favre.lib.crypto.bcrypt.BCrypt;
 
+import java.util.List;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -87,7 +88,7 @@ public class UserService {
         UserModel existingUser = userRepository.findById(idUser)
             .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + idUser));
         
-        // Validate and update username if provided - modificado para lidar com UserModel diretamente
+        // Validate and update username if provided
         if (partialUser.getUsername() != null) {
             // Check if new username is already taken by another user
             UserModel userWithSameUsername = userRepository.findByUsername(partialUser.getUsername());
@@ -152,6 +153,48 @@ public class UserService {
             throw new InvalidUserDataException("Name cannot be null or blank");
         }
         
-        // Additional validation could be added here (password strength, email format, etc.)
+       
     }
+
+
+
+    /**
+ * Finds a user by username
+ * @param username The username to find
+ * @return The user model
+ * @throws InvalidUserDataException if the username is null or blank
+ * @throws UserNotFoundException if the user is not found
+ */
+public UserModel findByUsername(String username) {
+    if (username == null || username.isBlank()) {
+        throw new InvalidUserDataException("Username cannot be null or blank");
+    }
+    
+    UserModel user = userRepository.findByUsername(username);
+    if (user == null) {
+        throw new UserNotFoundException("User not found with username: " + username);
+    }
+    
+    return user;
+}
+/**
+     * Finds all users except the one with the specified ID
+     * This is useful when adding collaborators to a task
+     * @param userId the ID of the user to exclude from results
+     * @return list of all users except the one with the specified ID
+     * @throws UserNotFoundException if the user doesn't exist
+     */
+    public List<UserModel> findAllExcept(UUID userId) {
+        // Validate that the user exists
+        userRepository.findById(userId)
+            .orElseThrow(() -> new UserNotFoundException("User with ID " + userId + " not found"));
+            
+        // Get all users and filter out the one with the specified ID
+        return userRepository.findAll().stream()
+            .filter(user -> !user.getId().equals(userId))
+            .toList();
+    }
+
+
+
 }
